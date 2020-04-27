@@ -11,7 +11,7 @@ namespace mkz_school_service.Utility
         {
             DateTime? convertDate = null;
 
-            if (string.IsNullOrWhiteSpace(value))
+            if (!string.IsNullOrWhiteSpace(value))
             {
                 convertDate = DateTime.Parse(value);
             }

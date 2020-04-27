@@ -37,7 +37,8 @@ namespace mkz_school_service.DataAccess
                             STD_LAST_NAME = sqlDataReader["STD_LAST_NAME"].ToString(),
                             STD_BIRTH_DATE = Utility.UDate.ConvertDateOrNull(sqlDataReader["STD_BIRTH_DATE"].ToString()),
                             STD_EMAIL = sqlDataReader["STD_EMAIL"].ToString(),
-                            STD_IMAGE = sqlDataReader["STD_IMAGE"].ToString()
+                            STD_IMAGE = sqlDataReader["STD_IMAGE"].ToString(),
+                            STD_FULL_NAME = sqlDataReader["STD_FULL_NAME"].ToString()
                         });
                     }
                 }
@@ -80,6 +81,7 @@ namespace mkz_school_service.DataAccess
                 sqlCommand.Parameters.Add(ResponseBase.IS_SUCCESS_PARAMETER, SqlDbType.Bit,int.MaxValue).Direction = System.Data.ParameterDirection.Output;
                 sqlCommand.Parameters.Add(ResponseBase.STATUS_CODE_PARAMETER, SqlDbType.VarChar,10).Direction = System.Data.ParameterDirection.Output;
                 sqlCommand.Parameters.Add(ResponseBase.STATUS_MESSAGE_PARAMETER, SqlDbType.VarChar,350).Direction = System.Data.ParameterDirection.Output;
+                sqlCommand.Parameters.Add(ResponseBase.GENERATED_ID_PARAMETER, SqlDbType.UniqueIdentifier,int.MaxValue).Direction = System.Data.ParameterDirection.Output;
 
                 try
                 {
@@ -90,6 +92,13 @@ namespace mkz_school_service.DataAccess
                     baseResponse.IsSuccess = Convert.ToBoolean(sqlCommand.Parameters[ResponseBase.IS_SUCCESS_PARAMETER].Value);
                     baseResponse.StatusCode = Convert.ToString(sqlCommand.Parameters[ResponseBase.STATUS_CODE_PARAMETER].Value);
                     baseResponse.Message = Convert.ToString(sqlCommand.Parameters[ResponseBase.STATUS_MESSAGE_PARAMETER].Value);
+
+                    if (baseResponse.IsSuccess)
+                    {
+                        student.STD_ID = Guid.Parse(Convert.ToString(sqlCommand.Parameters[ResponseBase.GENERATED_ID_PARAMETER].Value));
+                        baseResponse.Data = student;
+                    }
+
 
                 }
                 catch (Exception ex)
